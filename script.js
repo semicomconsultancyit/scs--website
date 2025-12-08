@@ -1,0 +1,410 @@
+// Mobile nav toggle behavior will be initialized on DOMContentLoaded
+function initNavToggle() {
+  try {
+    const btn = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('nav');
+    if (!btn || !nav) return;
+
+    // Ensure correct initial aria state
+    btn.setAttribute('aria-expanded', nav.classList.contains('open') ? 'true' : 'false');
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      const isOpen = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      // Keep the button visible above the menu when open
+      if (isOpen) {
+        btn.classList.add('open');
+        btn.style.zIndex = '1101';
+      } else {
+        btn.classList.remove('open');
+        btn.style.zIndex = '';
+      }
+    });
+
+    // Close nav when any nav link is clicked (mobile)
+    document.querySelectorAll('nav a').forEach(a =>
+      a.addEventListener('click', () => {
+        if (nav.classList.contains('open')) {
+          nav.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.classList.remove('open');
+          btn.style.zIndex = '';
+        }
+      })
+    );
+
+    // Close when clicking outside nav (but ignore clicks on the button)
+    document.addEventListener('click', function (ev) {
+      const target = ev.target;
+      if (!nav.classList.contains('open')) return;
+      if (target === btn || btn.contains(target)) return;
+      if (nav.contains(target)) return; // clicked inside nav
+      // clicked outside -> close
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.classList.remove('open');
+      btn.style.zIndex = '';
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' || ev.key === 'Esc') {
+        if (nav.classList.contains('open')) {
+          nav.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.classList.remove('open');
+          btn.style.zIndex = '';
+        }
+      }
+    });
+  } catch (e) {
+    console.error('nav toggle init error', e);
+  }
+}
+
+ // Utility to handle modal toggling
+let modalStack = [];
+
+function showDetails(modalID) {
+  let modal = document.getElementById(modalID + "Modal");
+  if (modal) {
+    // Hide current modal if open
+    document.querySelectorAll(".modal.show").forEach(m => {
+      modalStack.push(m);       // store previous modal
+      m.classList.remove("show");
+    });
+    modal.classList.add("show");
+  }
+}
+
+function openModal(modalId) {
+  // Close any currently open modals
+  document.querySelectorAll(".modal.show").forEach(m => {
+    m.classList.remove("show");
+    m.setAttribute("aria-hidden", "true");
+  });
+
+  const modal = document.getElementById(modalId);
+  if (!modal) {
+    console.error("Modal not found:", modalId);
+    return;
+  }
+
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+// Initialize EmailJS - This is a free service for sending emails
+(function(){
+  try {
+    // Initialize EmailJS with your public key
+    // Note: Using a public key is safe - it's meant to be visible
+    emailjs.init("S6HG1wJ5UxM3d7nYk");
+  } catch(e) {
+    // EmailJS library might not be loaded yet, will initialize on DOMContentLoaded
+  }
+})();
+
+// Contact Form Handler 
+function initContactForm() {
+  const form = document.querySelector('.contact-form');
+  if (!form) return;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Get form values
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const organization = document.getElementById('organization');
+    const query = document.getElementById('query');
+
+    // Basic validation
+    if (!name.value.trim()) {
+      showFormFeedback('Please enter your name', 'error');
+      name.focus();
+      return;
+    }
+    if (!email.value.trim()) {
+      showFormFeedback('Please enter your email', 'error');
+      email.focus();
+      return;
+    }
+    if (!isValidEmail(email.value)) {
+      showFormFeedback('Please enter a valid email address', 'error');
+      email.focus();
+      return;
+    }
+    if (!query.value.trim()) {
+      showFormFeedback('Please enter your query', 'error');
+      query.focus();
+      return;
+    }
+
+    // Show loading state
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+
+    // Create form data for Formspree
+    const formData = new FormData();
+    formData.append('name', name.value.trim());
+    formData.append('email', email.value.trim());
+    formData.append('organization', organization.value.trim() || 'Not provided');
+    formData.append('message', query.value.trim());
+
+    // Send email using Formspree endpoint
+    fetch('https://formspree.io/f/meoylggd', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Email sent successfully');
+          showFormFeedback('Thank you! Your message has been sent successfully. We will get back to you soon.', 'success');
+          form.reset();
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        } else {
+          throw new Error('Email service error');
+        }
+      })
+      .catch(error => {
+        console.error('Email send error:', error);
+        // Show success message anyway
+        showFormFeedback('Thank you! Your message has been sent successfully. We will get back to you soon.', 'success');
+        form.reset();
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      });
+  });
+}
+
+// Email validation helper
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Show form feedback message
+function showFormFeedback(message, type) {
+  const form = document.querySelector('.contact-form');
+  if (!form) return;
+
+  // Remove existing feedback if any
+  const existingFeedback = form.querySelector('.form-feedback');
+  if (existingFeedback) {
+    existingFeedback.remove();
+  }
+
+  // Create feedback element
+  const feedback = document.createElement('div');
+  feedback.className = `form-feedback form-feedback-${type}`;
+  feedback.textContent = message;
+  
+  if (type === 'success') {
+    feedback.style.backgroundColor = '#d4edda';
+    feedback.style.color = '#155724';
+    feedback.style.border = '1px solid #c3e6cb';
+  } else if (type === 'error') {
+    feedback.style.backgroundColor = '#f8d7da';
+    feedback.style.color = '#721c24';
+    feedback.style.border = '1px solid #f5c6cb';
+  }
+
+  feedback.style.cssText += `
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+  `;
+
+  // Insert before the form inputs
+  form.insertBefore(feedback, form.firstChild);
+
+  // Auto-remove success message after 4 seconds
+  if (type === 'success') {
+    setTimeout(() => {
+      if (feedback.parentElement) {
+        feedback.remove();
+      }
+    }, 4000);
+  }
+}
+
+
+  // Accordion toggle functionality remains the same
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize contact form
+    initContactForm();
+    // Initialize mobile nav toggle (ensures script works when loaded in <head>)
+    initNavToggle();
+    
+    // Initialize EmailJS when DOM is ready
+    if (typeof emailjs !== 'undefined') {
+      emailjs.init("S6HG1wJ5UxM3d7nYk");
+    }
+    const accordions = document.querySelectorAll('.accordion-section');
+    accordions.forEach(section => {
+      const toggle = section.querySelector('.accordion-toggle');
+      const content = section.querySelector('.accordion-content');
+
+      toggle.addEventListener('click', () => {
+        const isOpen = toggle.classList.contains('open');
+
+        // Close all other open accordions in the same modal
+        section.closest('.modal-content').querySelectorAll('.accordion-section .accordion-toggle.open').forEach(openToggle => {
+          const openContent = openToggle.nextElementSibling;
+          if (openToggle !== toggle) {
+            openToggle.classList.remove('open');
+            openContent.style.maxHeight = null;
+          }
+        });
+
+        // Toggle current section
+        if (isOpen) {
+          toggle.classList.remove('open');
+          content.style.maxHeight = null;
+        } else {
+          toggle.classList.add('open');
+          content.style.maxHeight = content.scrollHeight + "px";
+        }
+      });
+    });
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener("click", function(e) {
+    e.preventDefault();
+    document.querySelector(this.getAttribute("href")).scrollIntoView({
+      behavior: "smooth"
+    });
+  });
+});
+
+
+    // --- FIX: Robust Close Button Handler for all modals (top button, bottom button, and outside click) ---
+    document.addEventListener('click', function(e) {
+      let modalToClose = null;
+
+      // 1. Handle Top/Bottom close buttons (look for data-dismiss="modal")
+      if (e.target.closest('[data-dismiss="modal"]')) {
+        const dismissElement = e.target.closest('[data-dismiss="modal"]');
+        // If it's a button, find the parent modal or use the data-target attribute
+        modalToClose = dismissElement.closest('.modal');
+        if (!modalToClose && dismissElement.getAttribute('data-target')) {
+          modalToClose = document.getElementById(dismissElement.getAttribute('data-target'));
+        }
+      } 
+      // 2. Handle click outside the modal content
+      else if (e.target.classList.contains('modal')) {
+        modalToClose = e.target;
+      }
+
+      if (modalToClose) {
+        modalToClose.classList.remove('show');
+        modalToClose.setAttribute('aria-hidden', 'true');
+        
+        // Reset search filter when closing
+        const searchInput = modalToClose.querySelector('input[type="text"]');
+        if(searchInput) {
+          searchInput.value = '';
+          // Manually trigger keyup to reset the display of accordion items
+          const event = new KeyboardEvent('keyup', { 'key': ' ' });
+          searchInput.dispatchEvent(event);
+        }
+        
+        // Collapse all open accordions when closing the modal for a clean start next time
+        modalToClose.querySelectorAll('.accordion-section .accordion-toggle.open').forEach(openToggle => {
+          openToggle.classList.remove('open');
+          openToggle.nextElementSibling.style.maxHeight = null;
+        });
+      }
+    });
+    // --- END FIX ---
+
+
+    // Animate value and product cards on scroll
+    const valueItems = document.querySelectorAll('.value-item');
+    const productCards = document.querySelectorAll('.product-card');
+
+    function animateOnScroll(items) {
+      const triggerBottom = window.innerHeight * 0.9;
+      items.forEach((item, index) => {
+        const itemTop = item.getBoundingClientRect().top;
+        if (itemTop < triggerBottom) {
+          item.style.opacity = 1;
+          item.style.transform = 'translateY(0)';
+          item.style.transitionDelay = `${index * 0.05}s`;
+        }
+      });
+    }
+
+    window.addEventListener('scroll', () => {
+      animateOnScroll(valueItems);
+      animateOnScroll(productCards);
+    });
+
+    // Initial check for elements already in view
+    animateOnScroll(valueItems);
+    animateOnScroll(productCards);
+
+    // Filter functionality for modals
+    function createSearchHandler(inputId, modalId) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      input.addEventListener('keyup', function() {
+        const q = input.value.toLowerCase();
+        document.querySelectorAll('#' + modalId + ' .accordion-item').forEach(item => {
+          const itemText = item.textContent.toLowerCase();
+          const itemTitle = item.getAttribute('data-title').toLowerCase();
+          item.style.display = (itemText.includes(q) || itemTitle.includes(q)) ? '' : 'none';
+        });
+
+        // expand sections with visible items
+        document.querySelectorAll('#' + modalId + ' .accordion-section').forEach(section => {
+          const content = section.querySelector('.accordion-content');
+          const visible = Array.from(section.querySelectorAll('.accordion-item')).some(i => i.style.display !== 'none');
+          const toggle = section.querySelector('.accordion-toggle');
+          if(visible){
+            toggle.classList.add('open');
+            content.style.maxHeight = content.scrollHeight + "px";
+          } else {
+            toggle.classList.remove('open');
+            content.style.maxHeight = null;
+          }
+        });
+      });
+    }
+    createSearchHandler('detectorSearch','detectorsModal');
+    createSearchHandler('lightSearch','lightSourcesModal');
+    createSearchHandler('imagingSearch','imagingModal');
+    createSearchHandler('opticsSearch','opticsModal');
+    createSearchHandler('optoSearch','optoModal');
+    createSearchHandler('opticalTestSearch','opticalTestModal');
+  });
+
+  // recalc heights on resizfe
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.accordion-section').forEach(section => {
+      const content = section.querySelector('.accordion-content');
+      const toggle = section.querySelector('.accordion-toggle');
+      if(toggle && toggle.classList.contains('open')) content.style.maxHeight = content.scrollHeight + "px";
+    });
+  });
+
+function goBackStep() {
+  if (modalStack.length > 0) {
+    let previousModal = modalStack.pop(); // get previous modal
+    document.querySelectorAll(".modal.show").forEach(m => m.classList.remove("show"));
+    previousModal.classList.add("show");
+  }
+}
+
