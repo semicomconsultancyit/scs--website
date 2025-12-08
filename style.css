@@ -1,3 +1,27 @@
+/* Partner logo overrides: make trusted-partner logos very large on small screens */
+@media (max-width:768px){
+  .clients-logos-wrapper{
+    justify-items:center; /* center logos in the grid */
+  }
+  .clients-logos-wrapper img{
+    max-width:60vw !important; /* much larger on small tablets / phones in landscape */
+    width:auto;
+    height:auto;
+  }
+}
+
+@media (max-width:480px){
+  .clients-logos-wrapper{
+    justify-items:center;
+    grid-template-columns: 1fr !important; /* stack single column for largest visual impact */
+    gap:12px;
+  }
+  .clients-logos-wrapper img{
+    max-width:90vw !important; /* nearly full-bleed on very small screens */
+    width:auto;
+    height:auto;
+  }
+}
 
 :root{
   --bg-light:#EFECE3;
@@ -399,18 +423,27 @@ ul {
 
 .clients-logos-wrapper img {
   width: 100%;
-  max-width: 430px;
+  /* Make partner logos larger on desktop */
+  max-width: 640px;
   height: auto;
   object-fit: contain;
   filter: grayscale(40%);
 }
 
 @media(max-width:768px){
-  .clients-logos-wrapper img{ max-width:120px; }
+  /* Larger logos on tablet */
+  .clients-logos-wrapper img{ max-width:240px; }
 }
 
 @media(max-width:480px){
-  .clients-logos-wrapper img{ max-width:80px; }
+  /* Mobile: center logos and make them larger */
+  .clients-logos-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+  /* Use viewport-relative sizing so image scales nicely but doesn't overflow */
+  .clients-logos-wrapper img{ max-width:85vw; width:auto; height:auto; }
 }
 
 
