@@ -205,7 +205,7 @@ nav a:hover{opacity:0.9;}
   padding: 20px;
   border-radius: 14px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  width: 280px;
+  width: 180px;
   min-height: 320px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -490,7 +490,150 @@ ul {
 .product-card:hover img{ transform: scale(1.03);}
 /* ***************************************************************** */
 
+/* Chatbot plans: animated horizontal pricing cards */
+/* .plans-row {
+  display:flex;
+  width: 160px;
+  height: auto;
+  gap:22px;
+  margin-top:20px;
+  align-items:stretch;
+  justify-content:center;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  padding-bottom:20px;
+  padding-top:8px;
+  -webkit-overflow-scrolling: touch;  
+} */
 
+
+.plans-row {
+  display: flex;
+  width: 100%;              /* ✅ IMPORTANT */
+  gap: 22px;
+  margin-top: 20px;
+  align-items: stretch;
+  justify-content: center;  /* or space-between if you prefer */
+  flex-wrap: nowrap;        /* keeps cards in one row */
+  padding: 8px 0 20px;
+}
+
+
+.plan-card{
+  position:relative;
+  flex:0 0 300px;
+  background:#ffffff;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.12);
+  text-align:left;
+  color:var(--text-dark);
+  min-height:320px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  transform: translateY(24px);
+  opacity:0;
+  transition: all 0.32s ease;
+  animation: cardIn 0.6s cubic-bezier(.2,.9,.3,1) forwards;
+}
+.plans-row .plan-card:nth-child(1){ animation-delay:0.06s; }
+.plans-row .plan-card:nth-child(2){ animation-delay:0.12s; transform-origin:center; }
+.plans-row .plan-card:nth-child(3){ animation-delay:0.18s; }
+
+.plan-badge{
+  position:absolute;
+  top:-14px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#fff;
+  padding:8px 18px;
+  border-radius:20px;
+  box-shadow:0 6px 18px rgba(10,40,90,0.08);
+  font-weight:700;
+  color:var(--accent-dark);
+  font-size:13px;
+}
+
+.plan-card h4{ margin:8px 0 0 0; font-size:14px; color:#0a3a66; font-weight:800; }
+.price{ font-size:22px; font-weight:800; color:#052845; }
+.price .period { font-size:13px; font-weight:600; color:#666; margin-left:6px; }
+
+.plan-features{ list-style:none; padding:0; margin:8px 0; display:block; color:#25465a; }
+.plan-features li{ display:flex; gap:10px; align-items:center; margin:6px 0; font-weight:600; }
+.plan-features .icon{ width:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; font-size:12px; }
+.plan-features .ok{ background:#e6f7ef; color:#0b7a3b; box-shadow: inset 0 0 0 2px rgba(11,122,59,0.06); padding:4px;}
+.plan-features .no{ background:#fff0f0; color:#b92b2b; padding:4px; }
+
+.plan-footer{ margin-top:auto; font-size:13px; color:#666; }
+
+
+
+.plan-card:hover{ transform: translateY(-8px) scale(1.02); box-shadow:0 30px 60px rgba(10,40,90,0.12); }
+
+.plan-card.standard::before{ content:"Recommended"; position:absolute; top:-36px; left:50%; transform:translateX(-50%); background:linear-gradient(90deg,#6b4fa8,#a48be0); padding:6px 12px;border-radius:14px;color:#fff;font-size:12px; box-shadow:0 8px 20px rgba(106,79,168,0.12);}
+
+/* animate in */
+@keyframes cardIn { to { transform:translateY(0); opacity:1; } }
+
+/* ===== RESPONSIVE OVERRIDES (mobile/tablet) - non-destructive ===== */
+/* Mobile: stacked single column */
+@media (max-width:768px) {
+  .plans-row {
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 8px 12px 20px !important;
+    align-items: stretch !important;
+  }
+  .plan-card {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: 720px !important;
+    margin: 0 auto !important;
+    min-height: auto !important;
+    padding: 16px !important;
+  }
+  .plan-card h4{ font-size:16px; }
+  .price{ font-size:20px; }
+  .plan-features li{ font-size:15px; }
+  .plan-badge{ top:-12px; padding:6px 12px; }
+}
+
+/* Tablet: two columns */
+@media (min-width:769px) and (max-width:999px) {
+  .plans-row {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 20px !important;
+    justify-content: center !important;
+    padding: 10px 18px 22px !important;
+  }
+  .plan-card {
+    flex: 0 0 calc(50% - 20px) !important;
+    max-width: 48% !important;
+    min-height: 320px !important;
+  }
+}
+
+/* Wider desktops: keep original three-column feel */
+@media (min-width:1000px) {
+  .plans-row { flex-direction: row !important; flex-wrap: nowrap !important; gap:22px !important; }
+  .plan-card { flex: 0 0 300px !important; max-width:300px !important; }
+}
+
+/* Very small devices tweaks */
+@media (max-width:420px) {
+  .plan-features li{ font-size:14px; }
+  .price{ font-size:18px; }
+  .plan-card{ padding:14px; }
+}
+
+
+@media (max-width:700px) {
+  .plans-row { gap:12px; }
+  .plan-card { flex:0 0 86%; min-height:240px; }
+  .plan-badge{ top:-12px; padding:6px 12px; }
+}
 /* CONTACT SECTION */
 .contact-section{
   padding: 60px 20px;
@@ -1417,4 +1560,69 @@ nav.open ul{ display:flex !important; }
 .contact-form textarea {
   min-height: 120px;
   resize: vertical;
+} 
+
+/* Floating WhatsApp button (image-based). Positioned above the chatbot toggle to avoid visual clash */
+/* Sizes updated to match chatbot toggle and remove outer padding so the icon fills the button */
+.whatsapp-fab {
+  position: fixed;
+  right: 18px;
+  /* sit above the chatbot toggle */
+  bottom: 110px;
+  z-index: 1000001;
+  width: 50px; /* match chatbot default size */
+  height: 50px;
+  padding: 0; /* remove outer padding so image can fill the circle */
+  box-sizing: border-box;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  cursor: pointer;
+  border: none;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  isolation: isolate;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.12);
+}
+
+/* make the image fill the button as much as possible */
+.whatsapp-fab .whatsapp-img {
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  transform-origin: center center;
+}
+
+/* ensure any inline SVG styling won't interfere if present */
+.whatsapp-fab svg, .whatsapp-fab path, .whatsapp-fab circle { display: none !important; }
+
+.whatsapp-fab:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 44px rgba(0,0,0,0.18);
+}
+
+.whatsapp-fab:focus {
+  outline: 3px solid rgba(0,0,0,0.12);
+  outline-offset: 3px;
+  border-radius:50%;
+}
+
+/* Larger screens: match chatbot toggle (60x60) */
+@media (min-width:768px) {
+  .whatsapp-fab { width: 60px; height: 60px; bottom: 110px; }
+  .whatsapp-fab .whatsapp-img { width: 88%; height: 88%; }
+}
+
+/* Small mobile: match chatbot small size and keep above it */
+@media (max-width:480px){
+  .whatsapp-fab { right: 12px; bottom: 92px; width:45px; height:45px; padding:0; }
+  .whatsapp-fab .whatsapp-img { width: 90%; height: 90%; }
 }

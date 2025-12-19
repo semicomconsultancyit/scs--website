@@ -6,7 +6,7 @@
 <title>Semicom Consultancy Services</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/lucide-static/dist/umd/lucide.css"/>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=4">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
 <script src="script.js"></script>
 </head>
@@ -23,6 +23,7 @@
         <li><a href="#home">Home</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#products">Products</a></li>
+        <li><a href="#itservices">IT Services</a></li>
         <li><a href="#clients">Clients</a></li>
         <li><a href="#contact-section">Contact Us</a></li>
       </ul>
@@ -145,6 +146,97 @@
 
   </div>
 </section>
+
+<section id="itservices">
+  <div class="container">
+    <h2>IT Services</h2>
+
+    <div class="products-grid">
+      <div class="product-card" onclick="showDetails('chatbot')">
+        <img src="assests/chatbot.png" alt="Chatbot Development" style="width: 120px; height: auto;">
+        <h3>Chatbot Development</h3>
+      </div>
+
+      <div class="product-card" onclick="showDetails('data-extraction')">
+        <img src="assests/invoice.webp" alt="Invoice Data Extraction" style="width: 120px; height: auto;">
+        <h3>Data Extraction</h3>
+      </div>
+
+      <div class="product-card" onclick="showDetails('website')">
+        <img src="assests/website.png" alt="Website Development" style="width: 120px; height: auto;">
+        <h3>Website Development</h3>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- CHATBOT MODAL -->
+<div id="chatbotModal" class="modal" aria-hidden="true">
+  <div class="modal-content">
+    <div class="modal-header-flex">
+      <h2>Chatbot Development</h2>
+      <button class="btn-contact" data-dismiss="modal">Close</button>
+    </div>
+
+    <h3 style="margin-top:8px;">Plans</h3>
+
+    <div class="plans-row" role="list" aria-label="Chatbot plans">
+      <div class="plan-card basic card" role="listitem">
+        <h4>BASIC PLAN</h4>
+        <div class="price">₹9,999 <span class="period">/ month</span></div>
+
+        <ul class="plan-features">
+          <li><span class="icon ok">✓</span> Rule-based chatbot</li>
+          <li><span class="icon ok">✓</span> Website integration</li>
+          <li><span class="icon ok">✓</span> Analytics</li>
+          <li><span class="icon ok">✓</span> 1 language</li>
+          <li><span class="icon ok">✓</span> 2,000 messages</li>
+        </ul>
+
+        <div class="plan-footer small-muted">Add-ons and extra features billed separately.</div>
+      </div>
+
+      <div class="plan-card standard card" role="listitem">
+        <h4>STANDARD AI PLAN</h4>
+        <div class="price">₹24,999 <span class="period">/ month</span></div>
+
+        <ul class="plan-features">
+          <li><span class="icon ok">✓</span> AI chatbot</li>
+          <li><span class="icon ok">✓</span> 20-document knowledge base</li>
+          <li><span class="icon ok">✓</span> Persona customization</li>
+          <li><span class="icon ok">✓</span> 3 languages</li>
+          <li><span class="icon ok">✓</span> API & analytics</li>
+          <li><span class="icon ok">✓</span> Human handoff</li>
+        </ul>
+
+        <div class="plan-footer small-muted">Recommended for small teams and advanced support.</div>
+      </div>
+
+      <div class="plan-card business card" role="listitem">
+        <h4>BUSINESS ADVANCED</h4>
+        <div class="price">₹49,999 <span class="period">/ month</span></div>
+
+        <ul class="plan-features">
+          <li><span class="icon ok">✓</span> Unlimited flows</li>
+          <li><span class="icon ok">✓</span> 50 documents</li>
+          <li><span class="icon ok">✓</span> 30,000 messages</li>
+          <li><span class="icon ok">✓</span> CRM integrations</li>
+          <li><span class="icon ok">✓</span> Team analytics & automation</li>
+          <li><span class="icon ok">✓</span> Multi-channel deployment</li>
+        </ul>
+
+        <div class="plan-footer small-muted">Custom enterprise terms available.</div>
+      </div>
+    </div>
+
+    <p class="small-muted" style="margin-top:12px;">(For other customization price may vary)</p>
+
+    <!-- Chatbot enquiry form removed -->
+
+  </div>
+</div>
 
 <!-- LASERS MODAL -->
 <div id="lasersModal" class="modal" aria-hidden="true">
@@ -2154,5 +2246,27 @@ Convenient instrument access and support system automatic expansion and upgrade,
   </div>
 </footer>
 
+<!-- Floating WhatsApp button -->
+<a href="https://wa.me/918600418168?text=Hello%20Semicom%20Consultancy%20Services%20-%20I%20would%20like%20to%20chat" class="whatsapp-fab" aria-label="Chat on WhatsApp" title="Chat with us on WhatsApp" target="_blank" rel="noopener noreferrer">
+  <img src="assests/whatsapp.png" alt="WhatsApp" class="whatsapp-img" loading="lazy" decoding="async">
+</a>  
+
+
+<script>
+        // Optional: Configure the chatbot before loading
+        window.ChatbotConfig = {
+            backendUrl: 'http://127.0.0.1:5000', // Your Render URL
+            primaryColor: '#667eea',
+            secondaryColor: '#764ba2',
+            position: 'bottom-right',
+            botName: 'SERA',
+            autoOpen: false,
+            requireName: false,
+            showUpload: true
+        };
+  </script>
+  <script src="chatbot-widget.js"></script>
+
 </body>
+
 </html>
