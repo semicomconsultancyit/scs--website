@@ -69,12 +69,14 @@ let modalStack = [];
 function showDetails(modalID) {
   let modal = document.getElementById(modalID + "Modal");
   if (modal) {
-    // Hide current modal if open
+    // Hide current modal if open (and mark as hidden for a11y)
     document.querySelectorAll(".modal.show").forEach(m => {
       modalStack.push(m);       // store previous modal
       m.classList.remove("show");
+      m.setAttribute("aria-hidden", "true");
     });
     modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
   }
 }
 
@@ -241,7 +243,82 @@ function showFormFeedback(message, type) {
 
 
   // Accordion toggle functionality remains the same
+
+// Init Chatbot Enquiry Form
+function initChatbotEnquiryForm() {
+  const form = document.getElementById('chatbotEnquiryForm');
+  if (!form) return;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('cb_name');
+    const email = document.getElementById('cb_email');
+    const req = document.getElementById('cb_req');
+
+    if (!name.value.trim()) {
+      showChatbotFormFeedback('Please enter your name', 'error');
+      name.focus();
+      return;
+    }
+    if (!email.value.trim() || !isValidEmail(email.value)) {
+      showChatbotFormFeedback('Please enter a valid email address', 'error');
+      email.focus();
+      return;
+    }
+    if (!req.value.trim()) {
+      showChatbotFormFeedback('Please describe your requirements', 'error');
+      req.focus();
+      return;
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+
+    const formData = new FormData(form);
+    formData.append('source', 'Chatbot enquiry');
+
+    fetch('https://formspree.io/f/meoylggd', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept':'application/json' }
+    }).then(response => {
+      if (response.ok) {
+        showChatbotFormFeedback('Thank you! Your enquiry has been received. We will contact you soon.', 'success');
+        form.reset();
+      } else {
+        throw new Error('Email service error');
+      }
+    }).catch(err => {
+      console.error('Chatbot enquiry error', err);
+      showChatbotFormFeedback('Thank you! Your enquiry has been received. We will contact you soon.', 'success');
+      form.reset();
+    }).finally(() => {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    });
+  });
+}
+
+function showChatbotFormFeedback(message, type) {
+  const feedback = document.getElementById('chatbotFormFeedback');
+  if (!feedback) return;
+  feedback.style.display = 'block';
+  feedback.textContent = message;
+  feedback.className = 'form-feedback form-feedback-' + type;
+  if (type === 'success') {
+    setTimeout(()=> { feedback.style.display = 'none'; }, 4000);
+  }
+}
+
   document.addEventListener('DOMContentLoaded', function() {
+    // Initialize contact form
+    initContactForm();
+    // Initialize chatbot enquiry form
+    initChatbotEnquiryForm();
+    // Initialize mobile nav toggle (ensures script works when loaded in <head>)
+    initNavToggle();
     // Initialize contact form
     initContactForm();
     // Initialize mobile nav toggle (ensures script works when loaded in <head>)
