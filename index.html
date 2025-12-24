@@ -249,6 +249,53 @@
         <option value="business">Business Advanced — ₹49,999 / month</option>
       </select>
 
+      <label for="cb_company">Company Name</label>
+      <input id="cb_company" name="company" type="text" placeholder="Your company name" required>
+
+      <label for="cb_contact_person">Contact Person</label>
+      <input id="cb_contact_person" name="contact_person" type="text" placeholder="Contact person's name" required>
+
+      <label for="cb_phone">Phone Number</label>
+      <input id="cb_phone" name="phone" type="tel" placeholder="Your phone number" required>
+
+      <label for="cb_industry">Industry</label>
+      <select id="cb_industry" name="industry" aria-label="Select industry" required>
+        <option value="">Select Industry</option>
+        <option value="education">Education</option>
+        <option value="e-commerce">E-commerce</option>
+        <option value="finance">Finance</option>
+        <option value="medical">Medical</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label for="cb_purpose">What is the primary purpose of the chatbot?</label>
+      <select id="cb_purpose" name="purpose" aria-label="Select primary purpose" required>
+        <option value="">Select Purpose</option>
+        <option value="customer_support">Customer Support</option>
+        <option value="lead_generation">Lead Generation</option>
+        <option value="sales_assistant">Sales Assistant</option>
+        <option value="appointment_booking">Appointment Booking</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label for="cb_deploy">Where do you want to deploy the chatbot?</label>
+      <select id="cb_deploy" name="deploy" aria-label="Select deployment location" required>
+        <option value="">Select Deployment</option>
+        <option value="website">Website</option>
+        <option value="whatsapp">WhatsApp</option>
+        <option value="mobile_app">Mobile App</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label for="cb_interactions">Estimated daily user interactions?</label>
+      <select id="cb_interactions" name="interactions" aria-label="Select estimated interactions" required>
+        <option value="">Select Range</option>
+        <option value="0-100">0-100</option>
+        <option value="100-500">100-500</option>
+        <option value="500-2000">500-2000</option>
+        <option value="2000+">2000+</option>
+      </select>
+
       <label for="cb_req">Describe your requirements</label>
       <textarea id="cb_req" name="message" rows="4" placeholder="Briefly describe your use-case and requirements" required></textarea>
 
