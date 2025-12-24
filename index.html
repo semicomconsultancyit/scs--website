@@ -232,8 +232,31 @@
     </div>
 
     <p class="small-muted" style="margin-top:12px;">(For other customization price may vary)</p>
+    <!-- Chatbot enquiry form -->
+    <form id="chatbotEnquiryForm" class="contact-form" novalidate style="margin-top:14px;">
+      <div id="chatbotFormFeedback" class="form-feedback" style="display:none; margin-bottom:12px;"></div>
 
-    <!-- Chatbot enquiry form removed -->
+      <label for="cb_name">Name</label>
+      <input id="cb_name" name="name" type="text" placeholder="Your full name" required>
+
+      <label for="cb_email">Email</label>
+      <input id="cb_email" name="email" type="email" placeholder="you@example.com" required>
+
+      <label for="cb_plan">Preferred Plan</label>
+      <select id="cb_plan" name="plan" aria-label="Select plan">
+        <option value="basic">Basic Plan — ₹9,999 / month</option>
+        <option value="standard">Standard AI Plan — ₹24,999 / month</option>
+        <option value="business">Business Advanced — ₹49,999 / month</option>
+      </select>
+
+      <label for="cb_req">Describe your requirements</label>
+      <textarea id="cb_req" name="message" rows="4" placeholder="Briefly describe your use-case and requirements" required></textarea>
+
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:10px;">
+        <button type="button" class="btn-contact" onclick="window.open('https://wa.me/918600418168?text=Request%20RFQ%20for%20ChatGPT','_blank')">Request RFQ</button>
+        <button type="submit" class="btn-contact">Submit Enquiry</button>
+      </div>
+    </form>
 
   </div>
 </div>
