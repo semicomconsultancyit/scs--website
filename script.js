@@ -253,6 +253,13 @@ function initChatbotEnquiryForm() {
     e.preventDefault();
     const name = document.getElementById('cb_name');
     const email = document.getElementById('cb_email');
+    const company = document.getElementById('cb_company');
+    const contactPerson = document.getElementById('cb_contact_person');
+    const phone = document.getElementById('cb_phone');
+    const industry = document.getElementById('cb_industry');
+    const purpose = document.getElementById('cb_purpose');
+    const deploy = document.getElementById('cb_deploy');
+    const interactions = document.getElementById('cb_interactions');
     const req = document.getElementById('cb_req');
 
     if (!name.value.trim()) {
@@ -263,6 +270,41 @@ function initChatbotEnquiryForm() {
     if (!email.value.trim() || !isValidEmail(email.value)) {
       showChatbotFormFeedback('Please enter a valid email address', 'error');
       email.focus();
+      return;
+    }
+    if (!company.value.trim()) {
+      showChatbotFormFeedback('Please enter your company name', 'error');
+      company.focus();
+      return;
+    }
+    if (!contactPerson.value.trim()) {
+      showChatbotFormFeedback('Please enter the contact person\'s name', 'error');
+      contactPerson.focus();
+      return;
+    }
+    if (!phone.value.trim()) {
+      showChatbotFormFeedback('Please enter your phone number', 'error');
+      phone.focus();
+      return;
+    }
+    if (!industry.value) {
+      showChatbotFormFeedback('Please select your industry', 'error');
+      industry.focus();
+      return;
+    }
+    if (!purpose.value) {
+      showChatbotFormFeedback('Please select the primary purpose of the chatbot', 'error');
+      purpose.focus();
+      return;
+    }
+    if (!deploy.value) {
+      showChatbotFormFeedback('Please select where you want to deploy the chatbot', 'error');
+      deploy.focus();
+      return;
+    }
+    if (!interactions.value) {
+      showChatbotFormFeedback('Please select the estimated daily user interactions', 'error');
+      interactions.focus();
       return;
     }
     if (!req.value.trim()) {

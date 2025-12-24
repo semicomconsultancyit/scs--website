@@ -87,7 +87,7 @@
         </button>
     `;
     
-    // Inject CSS with FULLY RESPONSIVE approach
+    // Inject CSS with SMALLER MOBILE WINDOW
     const style = document.createElement('style');
     style.textContent = `
         /* ===== CSS VARIABLES FOR RESPONSIVE DESIGN ===== */
@@ -174,36 +174,40 @@
         }
         
         /* ===== CHAT WINDOW ===== */
-        /* Base style - FULL SCREEN on mobile */
+        /* Base style - SMALLER WINDOW on mobile (not full screen) */
         .chatbot-window {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateY(20px);
+            width: 90vw;
+            max-width: 400px;
+            height: 70vh;
+            max-height: 600px;
             background: white;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             opacity: 0;
-            transform: translateY(20px);
             visibility: hidden;
             transition: all 0.3s ease;
             z-index: 999998;
-        }
-        
-        /* iOS Safari fix for 100vh */
-        @supports (-webkit-touch-callout: none) {
-            .chatbot-window {
-                height: -webkit-fill-available;
-            }
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         }
         
         .chatbot-window.open {
             opacity: 1;
-            transform: translateY(0);
+            transform: translate(-50%, -50%) translateY(0);
             visibility: visible;
+        }
+        
+        /* For very small screens, adjust size */
+        @media (max-height: 600px) {
+            .chatbot-window {
+                height: 80vh;
+                max-height: 80vh;
+            }
         }
         
         /* ===== CHAT HEADER ===== */
@@ -218,6 +222,7 @@
             min-height: 56px;
             position: relative;
             z-index: 1;
+            border-radius: 20px 20px 0 0;
         }
         
         .header-content {
@@ -306,6 +311,7 @@
             overscroll-behavior: contain;
             scrollbar-width: thin;
             scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+            min-height: 0;
         }
         
         .chat-messages::-webkit-scrollbar {
@@ -397,6 +403,8 @@
             flex-shrink: 0;
             position: relative;
             z-index: 1;
+            position: sticky;
+            bottom: 0;
         }
         
         .input-container {
@@ -415,6 +423,8 @@
             min-height: 44px;
             -webkit-appearance: none;
             appearance: none;
+            -webkit-user-select: text;
+            user-select: text;
         }
         
         .input-container input:focus {
@@ -436,6 +446,8 @@
             justify-content: center;
             transition: opacity 0.2s;
             -webkit-tap-highlight-color: transparent;
+            position: relative;
+            z-index: 2;
         }
         
         .input-container button:hover,
@@ -486,6 +498,14 @@
             40% { transform: scale(1); }
         }
         
+        /* ===== KEYBOARD ADJUSTMENTS ===== */
+        .keyboard-open .chatbot-window {
+            height: 80vh !important;
+            max-height: 80vh !important;
+            top: 10vh !important;
+            transform: translate(-50%, 0) !important;
+        }
+        
         /* ===== RESPONSIVE MEDIA QUERIES ===== */
         
         /* SMALL TABLETS and LARGE PHONES (600px and up) */
@@ -493,17 +513,22 @@
             .chatbot-window {
                 width: 380px;
                 height: 550px;
-                border-radius: 20px;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+                bottom: 80px;
                 top: auto;
                 left: auto;
-                bottom: 80px;
                 right: 20px;
+                transform: translateY(20px);
+                max-width: none;
+                max-height: none;
             }
             
-            ${config.position === 'bottom-left' ? '.chatbot-window { right: auto; left: 20px; }' : ''}
-            ${config.position === 'top-right' ? '.chatbot-window { bottom: auto; top: 80px; }' : ''}
-            ${config.position === 'top-left' ? '.chatbot-window { bottom: auto; top: 80px; left: 20px; right: auto; }' : ''}
+            .chatbot-window.open {
+                transform: translateY(0);
+            }
+            
+            ${config.position === 'bottom-left' ? '.chatbot-window { right: auto; left: 20px; bottom: 80px; }' : ''}
+            ${config.position === 'top-right' ? '.chatbot-window { bottom: auto; top: 80px; transform: translateY(20px); } .chatbot-window.open { transform: translateY(0); }' : ''}
+            ${config.position === 'top-left' ? '.chatbot-window { bottom: auto; top: 80px; left: 20px; right: auto; transform: translateY(20px); } .chatbot-window.open { transform: translateY(0); }' : ''}
             
             .chatbot-toggle-btn {
                 width: 56px;
@@ -546,6 +571,11 @@
         
         /* ===== EXTRA SMALL DEVICES (below 400px) ===== */
         @media (max-width: 400px) {
+            .chatbot-window {
+                width: 95vw;
+                height: 65vh;
+            }
+            
             .chatbot-toggle-btn {
                 width: 40px;
                 height: 40px;
@@ -593,6 +623,11 @@
         
         /* VERY SMALL DEVICES (below 360px) */
         @media (max-width: 360px) {
+            .chatbot-window {
+                width: 95vw;
+                height: 60vh;
+            }
+            
             .chatbot-toggle-btn {
                 width: 38px;
                 height: 38px;
@@ -641,14 +676,15 @@
             .message-content {
                 font-size: 12px;
             }
-            
-            .input-area {
-                padding: 8px;
-            }
         }
         
         /* EXTRA SMALL DEVICES (below 320px) */
         @media (max-width: 320px) {
+            .chatbot-window {
+                width: 98vw;
+                height: 55vh;
+            }
+            
             .chatbot-toggle-btn {
                 width: 36px;
                 height: 36px;
@@ -669,45 +705,15 @@
         
         /* For screens with height less than 700px */
         @media (max-height: 700px) {
-            .chatbot-window.open {
-                height: calc(100vh - 10px);
-                top: 5px;
-                left: 5px;
-                width: calc(100vw - 10px);
-                border-radius: 12px;
-            }
-            
-            @media (min-width: 600px) {
-                .chatbot-window {
-                    height: 500px;
-                }
-            }
-            
-            .chatbot-header {
-                min-height: 52px;
-                padding: 10px 12px;
-            }
-            
-            .chat-messages {
-                padding: 10px;
-                gap: 8px;
+            .chatbot-window {
+                height: 65vh;
             }
         }
         
         /* For very short screens (below 500px) */
         @media (max-height: 500px) {
-            .chatbot-window.open {
-                height: calc(100vh - 5px);
-                top: 2px;
-                left: 2px;
-                width: calc(100vw - 4px);
-                border-radius: 8px;
-            }
-            
-            @media (min-width: 600px) {
-                .chatbot-window {
-                    height: 450px;
-                }
+            .chatbot-window {
+                height: 70vh;
             }
             
             .chatbot-header {
@@ -763,15 +769,9 @@
         
         /* ===== LANDSCAPE ORIENTATION ===== */
         @media (orientation: landscape) and (max-height: 600px) {
-            .chatbot-window.open {
-                height: 90vh;
-                top: 5vh;
-            }
-            
-            @media (min-width: 600px) {
-                .chatbot-window {
-                    height: 400px;
-                }
+            .chatbot-window {
+                height: 80vh;
+                width: 85vw;
             }
             
             .chatbot-header {
@@ -887,7 +887,9 @@
             email: localStorage.getItem('chatbotUserEmail') || ''
         },
         isMobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent),
-        viewportHeight: window.innerHeight
+        viewportHeight: window.innerHeight,
+        isKeyboardOpen: false,
+        originalViewportHeight: window.innerHeight
     };
 
     // Initialize
@@ -917,18 +919,82 @@
         // Listen for resize
         window.addEventListener('resize', handleResize);
         window.addEventListener('orientationchange', handleOrientationChange);
+        
+        // Detect keyboard visibility on mobile
+        if (state.isMobile) {
+            setupKeyboardDetection();
+        }
     }
     
-    // Update viewport height (for mobile browsers)
+    // Setup keyboard detection
+    function setupKeyboardDetection() {
+        const chatbotWindow = document.getElementById('chatbotWindow');
+        const userInput = document.getElementById('userInput');
+        
+        // Detect when keyboard opens
+        userInput.addEventListener('focus', () => {
+            state.isKeyboardOpen = true;
+            chatbotWindow.classList.add('keyboard-open');
+            
+            // Adjust window position for keyboard
+            setTimeout(() => {
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 300);
+        });
+        
+        // Detect when keyboard closes
+        userInput.addEventListener('blur', () => {
+            state.isKeyboardOpen = false;
+            chatbotWindow.classList.remove('keyboard-open');
+        });
+        
+        // Detect resize (keyboard might trigger resize)
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newHeight = window.innerHeight;
+                const diff = Math.abs(state.originalViewportHeight - newHeight);
+                
+                if (diff > 100) { // Significant height change (keyboard)
+                    state.isKeyboardOpen = newHeight < state.originalViewportHeight;
+                    if (state.isKeyboardOpen) {
+                        chatbotWindow.classList.add('keyboard-open');
+                    } else {
+                        chatbotWindow.classList.remove('keyboard-open');
+                    }
+                }
+            }, 100);
+        });
+    }
+    
+    // Update viewport height
     function updateViewportHeight() {
         state.viewportHeight = window.innerHeight;
-        document.documentElement.style.setProperty('--viewport-height', `${state.viewportHeight}px`);
+        state.originalViewportHeight = window.innerHeight;
     }
     
     function handleResize() {
         updateViewportHeight();
         if (state.isOpen) {
-            // Scroll to bottom when resizing
+            // Adjust for keyboard
+            if (state.isMobile) {
+                const currentHeight = window.innerHeight;
+                const isKeyboardNowOpen = currentHeight < state.originalViewportHeight * 0.8;
+                
+                if (isKeyboardNowOpen !== state.isKeyboardOpen) {
+                    state.isKeyboardOpen = isKeyboardNowOpen;
+                    const chatbotWindow = document.getElementById('chatbotWindow');
+                    if (isKeyboardNowOpen) {
+                        chatbotWindow.classList.add('keyboard-open');
+                    } else {
+                        chatbotWindow.classList.remove('keyboard-open');
+                    }
+                }
+            }
+            
+            // Scroll to bottom
             setTimeout(() => {
                 const chatMessages = document.getElementById('chatMessages');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -937,14 +1003,18 @@
     }
     
     function handleOrientationChange() {
-        // Wait for orientation to complete
         setTimeout(() => {
             updateViewportHeight();
             if (state.isOpen) {
                 const chatMessages = document.getElementById('chatMessages');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                if (state.isKeyboardOpen) {
+                    const userInput = document.getElementById('userInput');
+                    userInput.focus();
+                }
             }
-        }, 300);
+        }, 500);
     }
     
     // Event binding
@@ -961,7 +1031,7 @@
             if (e.key === 'Enter') sendMessage();
         });
         
-        // Touch events for better mobile experience
+        // Touch events for mobile
         toggleBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
             toggleBtn.classList.add('active');
@@ -973,10 +1043,10 @@
             toggleChatbot();
         }, { passive: false });
         
-        // Handle virtual keyboard on mobile
+        // Handle virtual keyboard
         userInput.addEventListener('focus', handleMobileKeyboard);
         
-        // Close when clicking outside on desktop
+        // Close when clicking outside
         if (!state.isMobile) {
             document.addEventListener('click', (e) => {
                 const chatbotWindow = document.getElementById('chatbotWindow');
@@ -996,6 +1066,19 @@
                 closeChatbot();
             }
         });
+        
+        // Close when tapping on backdrop overlay for mobile
+        if (state.isMobile) {
+            document.addEventListener('click', (e) => {
+                const chatbotWindow = document.getElementById('chatbotWindow');
+                const toggleBtn = document.getElementById('chatbotToggleBtn');
+                
+                if (state.isOpen && 
+                    e.target.classList.contains('chatbot-window-backdrop')) {
+                    closeChatbot();
+                }
+            });
+        }
     }
     
     function handleMobileKeyboard() {
@@ -1003,7 +1086,7 @@
             setTimeout(() => {
                 const chatMessages = document.getElementById('chatMessages');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 300);
+            }, 500);
         }
     }
     
@@ -1012,17 +1095,19 @@
         const body = document.body;
         
         if (!state.isOpen) {
+            // Create backdrop overlay for mobile
+            if (state.isMobile) {
+                createBackdrop();
+            }
+            
             chatbotWindow.classList.add('open');
             state.isOpen = true;
             state.unreadCount = 0;
             updateNotificationBadge();
             
-            // Prevent background scrolling on mobile
-            if (state.isMobile) {
-                body.style.overflow = 'hidden';
-                body.style.position = 'fixed';
-                body.style.width = '100%';
-            }
+            // Reset keyboard state
+            state.isKeyboardOpen = false;
+            chatbotWindow.classList.remove('keyboard-open');
             
             // Focus input with delay for animation
             setTimeout(() => {
@@ -1038,21 +1123,66 @@
         }
     }
     
+    function createBackdrop() {
+        // Remove existing backdrop if any
+        const existingBackdrop = document.querySelector('.chatbot-backdrop');
+        if (existingBackdrop) {
+            existingBackdrop.remove();
+        }
+        
+        // Create backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'chatbot-backdrop';
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999997;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        
+        // Add backdrop to body
+        document.body.appendChild(backdrop);
+        
+        // Fade in backdrop
+        setTimeout(() => {
+            backdrop.style.opacity = '1';
+        }, 10);
+        
+        // Close chatbot when backdrop is clicked
+        backdrop.addEventListener('click', closeChatbot);
+    }
+    
+    function removeBackdrop() {
+        const backdrop = document.querySelector('.chatbot-backdrop');
+        if (backdrop) {
+            backdrop.style.opacity = '0';
+            setTimeout(() => {
+                if (backdrop.parentNode) {
+                    backdrop.parentNode.removeChild(backdrop);
+                }
+            }, 300);
+        }
+    }
+    
     function closeChatbot() {
         const chatbotWindow = document.getElementById('chatbotWindow');
-        const body = document.body;
         
         chatbotWindow.classList.remove('open');
         state.isOpen = false;
+        state.isKeyboardOpen = false;
+        chatbotWindow.classList.remove('keyboard-open');
         
-        // Restore scrolling on mobile
+        // Remove backdrop for mobile
         if (state.isMobile) {
-            body.style.overflow = '';
-            body.style.position = '';
-            body.style.width = '';
+            removeBackdrop();
         }
         
-        // Blur input
+        // Blur input (closes keyboard on mobile)
         const userInput = document.getElementById('userInput');
         userInput.blur();
     }
@@ -1148,7 +1278,6 @@
         // Limit messages
         if (state.messages.length > 50) {
             state.messages = state.messages.slice(-50);
-            // Remove old messages from DOM
             while (messagesContainer.children.length > 50) {
                 messagesContainer.removeChild(messagesContainer.firstChild);
             }
@@ -1169,7 +1298,6 @@
         
         messagesContainer.appendChild(typingDiv);
         
-        // Scroll to bottom
         setTimeout(() => {
             messagesContainer.scrollTo({
                 top: messagesContainer.scrollHeight,
@@ -1221,10 +1349,7 @@
             return;
         }
         
-        // Ping immediately
         pingBackend();
-        
-        // Ping every 10 minutes
         setInterval(pingBackend, 10 * 60 * 1000);
     }
     
@@ -1240,7 +1365,7 @@
                 }
             })
             .catch(() => {
-                // Silent fail - backend might be sleeping
+                // Silent fail
             });
     }
     
@@ -1262,6 +1387,7 @@
         },
         destroy: () => {
             cleanup();
+            removeBackdrop();
             if (widgetContainer.parentNode) {
                 widgetContainer.parentNode.removeChild(widgetContainer);
             }
