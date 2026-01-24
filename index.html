@@ -23,7 +23,6 @@
         <li><a href="#home">Home</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#products">Products</a></li>
-        <li><a href="#itservices">IT Services</a></li>
         <li><a href="#clients">Clients</a></li>
         <li><a href="#contact-section">Contact Us</a></li>
       </ul>
@@ -77,13 +76,6 @@
             <div>
               <div class="text">THz/Optics</div>
               <div class="desc small-muted">Cutting-edge photonic and THz systems delivering sensing and imaging solutions.</div>
-            </div>
-          </div>
-          <div class="expertise-card image-right" >
-            <img src="assests/ITCard.jpg" alt="IT Services" class="card-image-right" style="margin-left: 10px;"/>
-            <div class="text-container right">
-              <div class="text">IT Services</div>
-              <div class="desc small-muted">End-to-end IT solutions designed to accelerate digital transformation and automation.</div>
             </div>
           </div>
 
@@ -147,166 +139,6 @@
   </div>
 </section>
 
-<section id="itservices">
-  <div class="container">
-    <h2>IT Services</h2>
-
-    <div class="products-grid">
-      <div class="product-card" onclick="showDetails('chatbot')">
-        <img src="assests/chatbot.png" alt="Chatbot Development" style="width: 120px; height: auto;">
-        <h3>Chatbot Development</h3>
-      </div>
-
-      <div class="product-card" onclick="showDetails('data-extraction')">
-        <img src="assests/invoice.webp" alt="Invoice Data Extraction" style="width: 120px; height: auto;">
-        <h3>Data Extraction</h3>
-      </div>
-
-      <div class="product-card" onclick="showDetails('website')">
-        <img src="assests/website.png" alt="Website Development" style="width: 120px; height: auto;">
-        <h3>Website Development</h3>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- CHATBOT MODAL -->
-<div id="chatbotModal" class="modal" aria-hidden="true">
-  <div class="modal-content">
-    <div class="modal-header-flex">
-      <h2>Chatbot Development</h2>
-      <button class="btn-contact" data-dismiss="modal">Close</button>
-    </div>
-
-    <h3 style="margin-top:8px;">Plans</h3>
-
-    <div class="plans-row" role="list" aria-label="Chatbot plans">
-      <div class="plan-card basic card" role="listitem">
-        <h4>BASIC PLAN</h4>
-        <div class="price">₹9,999 <span class="period">/ month</span></div>
-
-        <ul class="plan-features">
-          <li><span class="icon ok">✓</span> Rule-based chatbot</li>
-          <li><span class="icon ok">✓</span> Website integration</li>
-          <li><span class="icon ok">✓</span> Analytics</li>
-          <li><span class="icon ok">✓</span> 1 language</li>
-          <li><span class="icon ok">✓</span> 2,000 messages</li>
-        </ul>
-
-        <div class="plan-footer small-muted">Add-ons and extra features billed separately.</div>
-      </div>
-
-      <div class="plan-card standard card" role="listitem">
-        <h4>STANDARD AI PLAN</h4>
-        <div class="price">₹24,999 <span class="period">/ month</span></div>
-
-        <ul class="plan-features">
-          <li><span class="icon ok">✓</span> AI chatbot</li>
-          <li><span class="icon ok">✓</span> 20-document knowledge base</li>
-          <li><span class="icon ok">✓</span> Persona customization</li>
-          <li><span class="icon ok">✓</span> 3 languages</li>
-          <li><span class="icon ok">✓</span> API & analytics</li>
-          <li><span class="icon ok">✓</span> Human handoff</li>
-        </ul>
-
-        <div class="plan-footer small-muted">Recommended for small teams and advanced support.</div>
-      </div>
-
-      <div class="plan-card business card" role="listitem">
-        <h4>BUSINESS ADVANCED</h4>
-        <div class="price">₹49,999 <span class="period">/ month</span></div>
-
-        <ul class="plan-features">
-          <li><span class="icon ok">✓</span> Unlimited flows</li>
-          <li><span class="icon ok">✓</span> 50 documents</li>
-          <li><span class="icon ok">✓</span> 30,000 messages</li>
-          <li><span class="icon ok">✓</span> CRM integrations</li>
-          <li><span class="icon ok">✓</span> Team analytics & automation</li>
-          <li><span class="icon ok">✓</span> Multi-channel deployment</li>
-        </ul>
-
-        <div class="plan-footer small-muted">Custom enterprise terms available.</div>
-      </div>
-    </div>
-
-    <p class="small-muted" style="margin-top:12px;">(For other customization price may vary)</p>
-    <!-- Chatbot enquiry form -->
-    <form id="chatbotEnquiryForm" class="contact-form" novalidate style="margin-top:14px;">
-      <div id="chatbotFormFeedback" class="form-feedback" style="display:none; margin-bottom:12px;"></div>
-
-      <label for="cb_name">Name</label>
-      <input id="cb_name" name="name" type="text" placeholder="Your full name" required>
-
-      <label for="cb_email">Email</label>
-      <input id="cb_email" name="email" type="email" placeholder="you@example.com" required>
-
-      <label for="cb_plan">Preferred Plan</label>
-      <select id="cb_plan" name="plan" aria-label="Select plan">
-        <option value="basic">Basic Plan — ₹9,999 / month</option>
-        <option value="standard">Standard AI Plan — ₹24,999 / month</option>
-        <option value="business">Business Advanced — ₹49,999 / month</option>
-      </select>
-
-      <label for="cb_company">Company Name</label>
-      <input id="cb_company" name="company" type="text" placeholder="Your company name" required>
-
-      <label for="cb_contact_person">Contact Person</label>
-      <input id="cb_contact_person" name="contact_person" type="text" placeholder="Contact person's name" required>
-
-      <label for="cb_phone">Phone Number</label>
-      <input id="cb_phone" name="phone" type="tel" placeholder="Your phone number" required>
-
-      <label for="cb_industry">Industry</label>
-      <select id="cb_industry" name="industry" aria-label="Select industry" required>
-        <option value="">Select Industry</option>
-        <option value="education">Education</option>
-        <option value="e-commerce">E-commerce</option>
-        <option value="finance">Finance</option>
-        <option value="medical">Medical</option>
-        <option value="other">Other</option>
-      </select>
-
-      <label for="cb_purpose">What is the primary purpose of the chatbot?</label>
-      <select id="cb_purpose" name="purpose" aria-label="Select primary purpose" required>
-        <option value="">Select Purpose</option>
-        <option value="customer_support">Customer Support</option>
-        <option value="lead_generation">Lead Generation</option>
-        <option value="sales_assistant">Sales Assistant</option>
-        <option value="appointment_booking">Appointment Booking</option>
-        <option value="other">Other</option>
-      </select>
-
-      <label for="cb_deploy">Where do you want to deploy the chatbot?</label>
-      <select id="cb_deploy" name="deploy" aria-label="Select deployment location" required>
-        <option value="">Select Deployment</option>
-        <option value="website">Website</option>
-        <option value="whatsapp">WhatsApp</option>
-        <option value="mobile_app">Mobile App</option>
-        <option value="other">Other</option>
-      </select>
-
-      <label for="cb_interactions">Estimated daily user interactions?</label>
-      <select id="cb_interactions" name="interactions" aria-label="Select estimated interactions" required>
-        <option value="">Select Range</option>
-        <option value="0-100">0-100</option>
-        <option value="100-500">100-500</option>
-        <option value="500-2000">500-2000</option>
-        <option value="2000+">2000+</option>
-      </select>
-
-      <label for="cb_req">Describe your requirements</label>
-      <textarea id="cb_req" name="message" rows="4" placeholder="Briefly describe your use-case and requirements" required></textarea>
-
-      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:10px;">
-        <button type="button" class="btn-contact" onclick="window.open('https://wa.me/918600418168?text=Request%20RFQ%20for%20ChatGPT','_blank')">Request RFQ</button>
-        <button type="submit" class="btn-contact">Submit Enquiry</button>
-      </div>
-    </form>
-
-  </div>
-</div>
 
 <!-- LASERS MODAL -->
 <div id="lasersModal" class="modal" aria-hidden="true">
