@@ -370,23 +370,22 @@ function showChatbotFormFeedback(message, type) {
     if (typeof emailjs !== 'undefined') {
       emailjs.init("S6HG1wJ5UxM3d7nYk");
     }
-    const accordions = document.querySelectorAll('.accordion-section');
-    accordions.forEach(section => {
+
+    // Only apply toggle to direct children of .modal-content (main cards)
+    document.querySelectorAll('.modal .accordion-section').forEach(section => {
       const toggle = section.querySelector('.accordion-toggle');
       const content = section.querySelector('.accordion-content');
-
+      if (!toggle || !content) return;
       toggle.addEventListener('click', () => {
         const isOpen = toggle.classList.contains('open');
-
         // Close all other open accordions in the same modal
-        section.closest('.modal-content').querySelectorAll('.accordion-section .accordion-toggle.open').forEach(openToggle => {
-          const openContent = openToggle.nextElementSibling;
+        section.parentElement.querySelectorAll('.accordion-section .accordion-toggle.open').forEach(openToggle => {
+          const openContent = openToggle.closest('.accordion-section').querySelector('.accordion-content');
           if (openToggle !== toggle) {
             openToggle.classList.remove('open');
-            openContent.style.maxHeight = null;
+            if (openContent) openContent.style.maxHeight = null;
           }
         });
-
         // Toggle current section
         if (isOpen) {
           toggle.classList.remove('open');
@@ -410,43 +409,35 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     // --- FIX: Robust Close Button Handler for all modals (top button, bottom button, and outside click) ---
     document.addEventListener('click', function(e) {
-      let modalToClose = null;
+  let modalToClose = null;
 
-      // 1. Handle Top/Bottom close buttons (look for data-dismiss="modal")
-      if (e.target.closest('[data-dismiss="modal"]')) {
-        const dismissElement = e.target.closest('[data-dismiss="modal"]');
-        // If it's a button, find the parent modal or use the data-target attribute
-        modalToClose = dismissElement.closest('.modal');
-        if (!modalToClose && dismissElement.getAttribute('data-target')) {
-          modalToClose = document.getElementById(dismissElement.getAttribute('data-target'));
-        }
-      } 
-      // 2. Handle click outside the modal content
-      else if (e.target.classList.contains('modal')) {
-        modalToClose = e.target;
-      }
+  // Close via button
+  if (e.target.closest('[data-dismiss="modal"]')) {
+    modalToClose = e.target.closest('.modal');
+  }
+  // Close by clicking backdrop
+  else if (e.target.classList.contains('modal')) {
+    modalToClose = e.target;
+  }
 
-      if (modalToClose) {
-        modalToClose.classList.remove('show');
-        modalToClose.setAttribute('aria-hidden', 'true');
-        
-        // Reset search filter when closing
-        const searchInput = modalToClose.querySelector('input[type="text"]');
-        if(searchInput) {
-          searchInput.value = '';
-          // Manually trigger keyup to reset the display of accordion items
-          const event = new KeyboardEvent('keyup', { 'key': ' ' });
-          searchInput.dispatchEvent(event);
-        }
-        
-        // Collapse all open accordions when closing the modal for a clean start next time
-        modalToClose.querySelectorAll('.accordion-section .accordion-toggle.open').forEach(openToggle => {
-          openToggle.classList.remove('open');
-          openToggle.nextElementSibling.style.maxHeight = null;
-        });
-      }
+  if (modalToClose) {
+    modalToClose.classList.remove('show');
+    modalToClose.setAttribute('aria-hidden', 'true');
+
+    // If previous modal exists, restore it
+    if (modalStack.length > 0) {
+      let previousModal = modalStack.pop();
+      previousModal.classList.add('show');
+      previousModal.setAttribute('aria-hidden', 'false');
+    }
+
+    // Collapse accordions
+    modalToClose.querySelectorAll('.accordion-section .accordion-toggle.open').forEach(openToggle => {
+      openToggle.classList.remove('open');
+      openToggle.nextElementSibling.style.maxHeight = null;
     });
-    // --- END FIX ---
+  }
+});
 
 
     // Animate value and product cards on scroll
@@ -527,3 +518,142 @@ function goBackStep() {
   }
 }
 
+const powerAmplifierData = [
+  {
+    category: "A) Broadband RF Power Amplifiers",
+    products: [
+      "20W 20-280MHz Power Amplifier",
+      "100W 1-6GHz Rack Mount Amplifier",
+      "500-3000MHz Power Amplifier",
+      "9KHz-250MHz 500W EMC Amplifier",
+      "10400-10600MHz 70W X-Band Amplifier",
+      "10000-13000MHz 20W Amplifier",
+      "2000-6000MHz 2W Ultra Broadband",
+      "400-6000MHz Solid State Amplifier",
+      "400-6000MHz 100W UAV Amplifier",
+      "2-7.2GHz 100W Module",
+      "2-7.2GHz 50W Module",
+      "2.45GHz 10W Module"
+    ]
+  },
+  {
+    category: "B) L band / S band / C band RF Power Amplifiers",
+    products: [
+      "L-band TRM 1000-1200MHz",
+      "960-1215MHz 100W L Band",
+      "5150-5350MHz 100W C Band",
+      "5700-5900MHz 100W C Band",
+      "900-1020MHz 50W Jammer",
+      "800-900MHz 50W Jammer",
+      "700-800MHz 50W Jammer",
+      "600-700MHz 50W Jammer",
+      "500-600MHz 50W Jammer",
+      "400-500MHz 50W Jammer",
+      "300-400MHz 50W Jammer",
+      "5050-5875MHz 100W Microwave"
+    ]
+  },
+  {
+    category: "C) X band / Ku band / Ka Band RF Power Amplifiers",
+    products: [
+      "40W Special Ka Band BUC",
+      "100W Special Ka Band BUC",
+      "40W Ka Band BUC",
+      "12.9-13.1GHz 120W RF PA",
+      "12.9-13.1GHz 80W RF PA",
+      "12.9-13.1GHz 50W RF PA",
+      "8-11GHz 20W Amplifier",
+      "X-Band 8-11GHz 20W",
+      "9-10GHz 6kW TWT",
+      "9-10GHz 6kW Microwave",
+      "18-26.5GHz 200W TWT",
+      "18-26.5GHz 40W Ka Band"
+    ]
+  },
+  {
+    category: "D) HF / VHF / UHF Band RF Power Amplifiers",
+    products: [
+      "500-2500MHz 30W UHF",
+      "9K-250MHz 500W Wideband",
+      "400-470MHz 80W UHF",
+      "600-1020MHz 50W UHF",
+      "80-1000MHz 400W UHF",
+      "495-505MHz 5kW Pulse",
+      "15-500MHz 53dBm PA",
+      "200-400MHz 50W RF",
+      "87-108MHz 30W FM",
+      "10-25MHz 500W HF",
+      "15K-250MHz 20W HF/VHF",
+      "800-1000MHz 100W UHF"
+    ]
+  },
+  {
+    category: "E) UAV / Drone Jammer Power Modules",
+    products: [
+      "900-1020MHz 50W Jammer",
+      "800-900MHz 50W Jammer",
+      "700-800MHz 50W Jammer",
+      "600-700MHz 50W Jammer",
+      "500-600MHz 50W Jammer",
+      "400-500MHz 50W Jammer",
+      "300-400MHz 50W Jammer",
+      "5150-5300MHz 50W Jammer",
+      "2400-2500MHz 50W Jammer",
+      "840-960MHz 50W Jammer",
+      "400-500MHz Custom Jammer",
+      "2000-4000MHz 50W Module"
+    ]
+  }
+];
+
+function buildPowerAmplifiers() {
+  const container = document.getElementById("paContainer");
+
+  powerAmplifierData.forEach(section => {
+
+    const category = document.createElement("div");
+    category.className = "accordion-section";
+
+    const toggle = document.createElement("div");
+    toggle.className = "accordion-toggle";
+    toggle.innerHTML = `<h4>${section.category}</h4><div class="arrow">▶</div>`;
+
+    const content = document.createElement("div");
+    content.className = "accordion-content";
+
+    const innerAccordion = document.createElement("div");
+    innerAccordion.className = "accordion";
+
+    section.products.forEach(product => {
+      const prodSection = document.createElement("div");
+      prodSection.className = "accordion-section";
+
+      const prodToggle = document.createElement("div");
+      prodToggle.className = "accordion-toggle";
+      prodToggle.innerHTML = `<h4>${product}</h4><div class="arrow">▶</div>`;
+
+      const prodContent = document.createElement("div");
+      prodContent.className = "accordion-content";
+      prodContent.innerHTML = `
+        <div class="accordion-item">
+          <p><strong>Product:</strong> ${product}</p>
+          <p>Detailed specifications can be inserted here using product-table structure.</p>
+        </div>
+      `;
+
+      prodSection.appendChild(prodToggle);
+      prodSection.appendChild(prodContent);
+      innerAccordion.appendChild(prodSection);
+    });
+
+    content.appendChild(innerAccordion);
+    category.appendChild(toggle);
+    category.appendChild(content);
+    container.appendChild(category);
+  });
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", buildPowerAmplifiers);
