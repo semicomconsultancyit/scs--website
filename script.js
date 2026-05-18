@@ -396,8 +396,7 @@ function showChatbotFormFeedback(message, type) {
         }
       });
     });
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener("click", function(e) {
     e.preventDefault();
     document.querySelector(this.getAttribute("href")).scrollIntoView({
@@ -405,7 +404,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
   });
 });
-
 
     // --- FIX: Robust Close Button Handler for all modals (top button, bottom button, and outside click) ---
     document.addEventListener('click', function(e) {
@@ -656,4 +654,3 @@ function buildPowerAmplifiers() {
 
 
 
-document.addEventListener("DOMContentLoaded", buildPowerAmplifiers);
